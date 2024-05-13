@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.network.PacketByteBuf;
@@ -34,9 +35,15 @@ public final class EasyPlaceProtocolServer {
         // INVERTED - DaylightDetector
         // OPEN - Barrel, Door, FenceGate, Trapdoor
         // PERSISTENT - Leaves
+        // WATERLOGGED - Slab, Stair, Leaves, etc...
+        // SIGNAL_FILE - Campfire, Soul Campfire
+        // POWERED - Lever <- POWERED, but only permits Lever.
         Properties.INVERTED,
         Properties.OPEN,
         Properties.PERSISTENT,
+        //Properties.WATERLOGGED, //I'll disable it for now.
+        Properties.SIGNAL_FIRE,
+        Properties.POWERED,
         // EnumProperty:
         // AXIS - Pillar
         // BLOCK_HALF - Stairs, Trapdoor
@@ -53,16 +60,20 @@ public final class EasyPlaceProtocolServer {
         Properties.DOOR_HINGE,
         Properties.SLAB_TYPE,
         Properties.STAIR_SHAPE,
-        Properties.BLOCK_FACE,
+        Properties.FACING,
         // IntProperty:
         // BITES - Cake
         // DELAY - Repeater
         // NOTE - NoteBlock
         // ROTATION - Banner, Sign, Skull
+        // LEVEL_3 - Cauldron
+        // LEVEL_8 - Composter
         Properties.BITES,
         Properties.DELAY,
         Properties.NOTE,
-        Properties.ROTATION
+        Properties.ROTATION,
+        Properties.LEVEL_3,
+        Properties.LEVEL_8
     );
 
     private EasyPlaceProtocolServer() {
@@ -118,7 +129,6 @@ public final class EasyPlaceProtocolServer {
 
         List<Property<?>> propList = new ArrayList<>(state.getBlock().getStateManager().getProperties());
         propList.sort(Comparator.comparing(Property::getName));
-
         try {
             for (Property<?> p : propList) {
                 if (!(p instanceof DirectionProperty) && WHITELISTED_PROPERTIES.contains(p)) {
@@ -131,6 +141,10 @@ public final class EasyPlaceProtocolServer {
                     int bitMask = ~(0xFFFFFFFF << requiredBits);
                     int valueIndex = protocolValue & bitMask;
                     //System.out.printf("trying to apply valInd: %d, bits: %d, prot val: 0x%08X\n", valueIndex, requiredBits, protocolValue);
+
+                    if (prop == Properties.POWERED && (state.getBlock() != Blocks.LEVER)) {
+                        break;
+                    }
 
                     if (valueIndex < list.size()) {
                         T value = list.get(valueIndex);
@@ -147,7 +161,6 @@ public final class EasyPlaceProtocolServer {
         } catch (Exception e) {
             LOGGER.warn("Exception trying to apply placement protocol value", e);
         }
-
         return state;
     }
 
@@ -164,7 +177,7 @@ public final class EasyPlaceProtocolServer {
             facing = Direction.byId(decodedFacingIndex);
 
             if (!property.getValues().contains(facing)) {
-                facing = context.getHorizontalPlayerFacing().getOpposite();
+                facing = context.getPlayerFacing().getOpposite();
             }
         }
 

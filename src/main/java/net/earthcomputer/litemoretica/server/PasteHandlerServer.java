@@ -48,7 +48,7 @@ public final class PasteHandlerServer {
             return;
         }
 
-        ServerWorld world = handler.player.getServerWorld();
+        ServerWorld world = handler.player.getWorld();
 
         BlockBox box = BlockBox.create(packet.minPos, packet.maxPos);
 
@@ -78,7 +78,7 @@ public final class PasteHandlerServer {
             int z = blockEntity.getInt("z");
             blockEntity.remove("id");
 
-            if (!box.contains(x, y, z)) {
+            if (!box.contains(new BlockPos(x, y, z))) {
                 continue;
             }
 

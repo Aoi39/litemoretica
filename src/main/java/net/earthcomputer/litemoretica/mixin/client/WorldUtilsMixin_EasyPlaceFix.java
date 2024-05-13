@@ -20,12 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = WorldUtils.class, remap = false)
 public class WorldUtilsMixin_EasyPlaceFix {
-    @Inject(method = "doEasyPlaceAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", remap = true), require = 2)
+    @Inject(method = "doEasyPlaceAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", remap = true), require = 2)
     private static void preInteractBlock(CallbackInfoReturnable<ActionResult> cir) {
         EasyPlaceFix.isPlacingWithEasyPlace = true;
     }
 
-    @Inject(method = "doEasyPlaceAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", shift = At.Shift.AFTER, remap = true), require = 2)
+    @Inject(method = "doEasyPlaceAction", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;interactBlock(Lnet/minecraft/client/network/ClientPlayerEntity;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;", shift = At.Shift.AFTER, remap = true), require = 2)
     private static void postInteractBlock(CallbackInfoReturnable<ActionResult> cir) {
         EasyPlaceFix.isPlacingWithEasyPlace = false;
     }
