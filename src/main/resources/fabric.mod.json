@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "litemoretica",
-  "version": "${version}",
+  "version": "1.18.2",
   "name": "litemoretica",
   "description": "Adds extra features to litematica",
   "authors": [
@@ -26,7 +26,7 @@
     "litemoretica.server.mixins.json"
   ],
   "depends": {
-    "minecraft": "${mcversions}",
+    "minecraft": "1.18.2",
     "fabricloader": ">=0.16.0"
   }
 }
