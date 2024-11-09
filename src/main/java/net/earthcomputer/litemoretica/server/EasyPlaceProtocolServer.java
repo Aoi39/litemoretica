@@ -54,7 +54,7 @@ public final class EasyPlaceProtocolServer {
         Properties.DOOR_HINGE,
         Properties.SLAB_TYPE,
         Properties.STAIR_SHAPE,
-        Properties.BLOCK_FACE,
+        Properties.FACING,
         // IntProperty:
         // BITES - Cake
         // DELAY - Repeater
@@ -165,7 +165,7 @@ public final class EasyPlaceProtocolServer {
             facing = Direction.byId(decodedFacingIndex);
 
             if (!property.getValues().contains(facing)) {
-                facing = context.getHorizontalPlayerFacing().getOpposite();
+                facing = context.getPlayerFacing().getOpposite();
             }
         }
 

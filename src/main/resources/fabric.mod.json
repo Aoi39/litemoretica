@@ -27,6 +27,6 @@
   ],
   "depends": {
     "minecraft": "${mcversions}",
-    "fabricloader": ">=0.15.0"
+    "fabricloader": ">=0.16.0"
   }
 }

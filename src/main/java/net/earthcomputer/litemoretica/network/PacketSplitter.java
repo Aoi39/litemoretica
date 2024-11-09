@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -73,7 +74,7 @@ public final class PacketSplitter {
             }
         } else {
             if (!currentlyReceiving.equals(type.id)) {
-                disconnecter.accept(Text.literal("Invalid split packet"));
+                disconnecter.accept(new LiteralText("Invalid split packet"));
             }
             currentBuf.writeBytes(buf);
             if (--partsLeftToReceive == 0) {

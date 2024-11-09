@@ -28,7 +28,10 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.*;
 import net.minecraft.world.tick.OrderedTick;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class PasteHandlerClient extends TaskPasteSchematicPerChunkBase {
     private final ArrayListMultimap<ChunkPos, SchematicPlacement> placementsPerChunk = ArrayListMultimap.create();
@@ -215,7 +218,7 @@ public class PasteHandlerClient extends TaskPasteSchematicPerChunkBase {
                         regionPosTransformed.getX() + placementMain.getOrigin().getX(),
                         regionPosTransformed.getY() + placementMain.getOrigin().getY(),
                         regionPosTransformed.getZ() + placementMain.getOrigin().getZ());
-                if (box.containsPos(BlockPos.ofFloored(entityPos))) {
+                if (box.containsPos(new BlockPos(entityPos.x, entityPos.y, entityPos.z))) {
                     NbtCompound entityTag = info.nbt.copy();
                     NBTUtils.writeEntityPositionToTag(entityPos, entityTag);
                     if (entityTag.contains("TileX", NbtElement.NUMBER_TYPE)) {
